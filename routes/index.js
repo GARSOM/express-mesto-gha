@@ -1,10 +1,8 @@
 const router = require("express").Router();
-const userRouter = require("../routes/users");
-const cardRouter = require("../routes/cards");
-const notFoundPage = require("../routes/notFoundPage");
+const userRouter = require("./users");
+const cardRouter = require("./cards");
 
 router.use("/users", userRouter);
 router.use("/cards", cardRouter);
-router.use("/*", notFoundPage);
 
 module.exports = router;
