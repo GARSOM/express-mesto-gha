@@ -68,12 +68,3 @@ module.exports.updateAvatar = (req, res) => {
             return res.status(500).send({ message: `Ошибка сервера` });
         });
 };
-const notFoundPage = (req, res) =>
-  res.status(404).send({ message: "Страница не найдена." });
-
-module.exports = { notFoundPage };
-const router = require("express").Router();
-
-router.use("/", notFoundPage);
-
-module.exports = router;
