@@ -61,7 +61,7 @@ module.exports.updateAvatar = (req, res) => {
         req.user.id,
         { avatar },
         { runValidators: true, new: true })
-        .then((user) => res.status(200).send({ data: user.avatar }))
+        .then((user) => res.status(200).send({ user }))
         .catch((err) => {
             if (err.name === "ValidationError") {
                 return res.status(400).send({ message: `Неверные данные` });
