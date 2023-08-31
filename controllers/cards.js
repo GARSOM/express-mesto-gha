@@ -4,6 +4,7 @@ const {
   INVALID_DATA,
   NOT_FOUND,
   DEFAULT_ERROR,
+  CREATED,
 } = require('../utils/constants');
 
 module.exports.getCards = (req, res) => {
@@ -16,7 +17,7 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user.id;
   Card.create({ name, link, owner })
-    .then((card) => res.status(DEFAULT_ERROR).send({ data: card }))
+    .then((card) => res.status(CREATED).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(INVALID_DATA).send({ message: 'Неверные данные' });
