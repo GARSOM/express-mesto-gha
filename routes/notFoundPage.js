@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { notFoundPage } = require('../controllers/notFoundPage');
+const { notFoundPage } = require('../controllers/NotFoundPage');
 
 router.use('/', notFoundPage);
 

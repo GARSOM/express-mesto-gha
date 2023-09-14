@@ -1,3 +1,7 @@
-const notFoundPage = (req, res) => res.status(404).send({ message: 'Страница не найдена' });
+const NotFound = require('../errors/NotFound');
+
+const notFoundPage = () => {
+  throw new NotFound('Страница не найдена.');
+};
 
 module.exports = { notFoundPage };
