@@ -29,27 +29,29 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-module.exports.deleteCardById = (req, res, next) => {
-  const { cardId } = req.params;
-
-  Card
-    .findById(cardId)
+module.exports.deleteCard = (req, res, next) => {
+  Card.findById(req.params.cardId)
+    // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (!card) {
-        return next(new NotFoundError('Карточка с указанным _id не найдена'));
+      if (card === null) {
+        // return res.status(404).send({ message: `Card Id not found.` });
+        throw new NotFoundError('Не найдена карточка с таким ID');
       }
-      if (!card.owner.equals(req.user._id)) {
-        return next(new ForbiddenError('Попытка удалить чужую карточку'));
+      if (card.owner.toString() !== req.user._id) {
+        // res.status(401).send({ message: `You can only delete your own card` });
+        throw new ForbiddenError('Вы можете удалять только свои карточки');
+      } else {
+        Card.findByIdAndDelete(req.params.cardId).then(() => res.status(200).send({ message: `deleted card ${card}` }));
       }
-      return card.remove().then(() => res.send({ message: 'Карточка успешно удалена' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-      } else {
-        next(err);
+        // return res.status(400).send({ message: `Invalid card ID` });
+        throw new BadRequestError('Неверные данные');
       }
-    });
+      next(err);
+    })
+    .catch(next);
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -64,7 +66,7 @@ module.exports.likeCard = (req, res, next) => {
       if (!card) {
         return next(new NotFoundError('Карточка с указанным _id не найдена'));
       }
-      return res.send({ card, message: 'Лайк успешно поставлен' });
+      return res.send({ card, message: 'Лайк поставлен' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -87,7 +89,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (!card) {
         return next(new NotFoundError('Карточка с указанным _id не найдена'));
       }
-      return res.send({ card, message: 'Лайк успешно удален' });
+      return res.send({ card, message: 'Лайк удален' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

@@ -22,8 +22,6 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(allRouters);
 
 app.use(errorLogger);
@@ -31,5 +29,5 @@ app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Приложение слушает порт: ${PORT}`);
+  console.log(`Сервер запущен на: http://localhost:${PORT}`);
 });
