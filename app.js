@@ -19,7 +19,6 @@ const app = express();
 
 app.use(requestLogger);
 app.use(helmet());
-app.use(limiter);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
