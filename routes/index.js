@@ -1,32 +1,23 @@
-const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
-const userRouter = require('./users');
-const cardRouter = require('./cards');
-const { login, createUser } = require('../controllers/users');
-const auth = require('../middlewares/auth');
+const express = require('express');
 
-router.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().email(),
-      password: Joi.string(),
-    }),
-  }),
-  login,
-);
-router.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().email(),
-      password: Joi.string(),
-    }),
-  }),
-  createUser,
-);
-router.use(auth);
-router.use('/users', userRouter);
-router.use('/cards', cardRouter);
+const auth = require('../middlewares/auth');
+const userRouters = require('./users');
+const cardRouters = require('./cards');
+const { validateSignUp, validateSignIn } = require('../middlewares/validators');
+const { createUser, login } = require('../controllers/users');
+
+const { NotFoundError } = require('../errors/index-errors');
+
+const router = express.Router();
+
+router.post('/signup', validateSignUp, createUser);
+router.post('/signin', validateSignIn, login);
+
+router.use('/users', auth, userRouters);
+router.use('/cards', auth, cardRouters);
+
+router.use('*', auth, () => {
+  throw new NotFoundError('Запрашиваемый ресурс не найден');
+});
 
 module.exports = router;
