@@ -81,7 +81,7 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      throw new InvalidReq('Невалидные данные ID');
+      throw new NoRights('Невалидные данные ID');
     }
     next(err);
   })
